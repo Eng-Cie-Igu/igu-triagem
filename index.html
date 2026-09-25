@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IGU Triagem de currículos</title>
+<meta name="theme-color" content="#0f2747">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="IGU Triagem">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#eef1f6;--sf:#fff;--ink:#0f1c2e;--mute:#5b6b80;--line:#d8dee8;--brand:#0f2747;--accent:#1f5fd6;--onacc:#fff;--wa:#12844a;--warn:#b45309;--chip:#e6eefb;--miss:#eceff4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1322;--sf:#131f33;--ink:#e6ecf5;--mute:#93a3ba;--line:#25344d;--brand:#0a1730;--accent:#6ea3ff;--onacc:#08152b;--wa:#25b866;--warn:#e3a25a;--chip:#1b2f50;--miss:#1e2b42}}
+:root[data-theme="dark"]{--bg:#0b1322;--sf:#131f33;--ink:#e6ecf5;--mute:#93a3ba;--line:#25344d;--brand:#0a1730;--accent:#6ea3ff;--onacc:#08152b;--wa:#25b866;--warn:#e3a25a;--chip:#1b2f50;--miss:#1e2b42}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+.top{background:var(--brand);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{background:#fff;color:#0f2747;font-weight:800;letter-spacing:.5px;border-radius:8px;padding:6px 10px}
+.brand b{display:block;font-size:1rem}.brand small{opacity:.75;font-size:.78rem}
+main{max-width:760px;margin:0 auto;padding:16px}
+h2{font-size:1rem;font-weight:700;margin:0 0 10px}
+.sub{color:var(--mute);margin:0 0 12px;font-size:.9rem}
+section{background:var(--sf);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(15,28,46,.06)}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--mute);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--sf);border:1px solid var(--line);border-radius:8px;padding:10px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+input[type=checkbox]{width:auto;margin-right:6px}textarea{min-height:90px;resize:vertical}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media (max-width:520px){.g2{grid-template-columns:1fr}}
+button,a.wa{font:inherit;font-weight:600;border:1px solid transparent;border-radius:8px;padding:10px 16px;min-height:42px;cursor:pointer;background:var(--accent);color:var(--onacc);text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+button.sec{background:var(--sf);color:var(--ink);border-color:var(--line)}
+a.wa{background:var(--wa);color:#fff}a.wa.off{background:var(--miss);color:var(--mute);pointer-events:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.userbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:600}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{background:none;color:var(--mute);border:0;border-bottom:3px solid transparent;border-radius:0}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.vaga{border-top:1px solid var(--line);padding:10px 0}.vaga small{display:block;color:var(--mute)}
+.card{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:12px;margin:10px 0;background:var(--sf)}
+.card.sent{border-left-color:var(--wa);opacity:.65}
+.card header{display:flex;justify-content:space-between;gap:8px}.card textarea{min-height:120px}
+.tag{background:var(--warn);color:#fff;border-radius:6px;padding:1px 8px;font-size:.75rem;font-weight:600;margin:0 6px 4px 0;display:inline-block}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{background:var(--chip);border-radius:99px;padding:2px 10px;font-size:.8rem}.chip.no{background:var(--miss);color:var(--mute);text-decoration:line-through}
+.empty,#st,#aerr{color:var(--mute);font-size:.85rem}#aerr{color:var(--warn);font-weight:600}
+.dz{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px dashed var(--line);border-radius:10px;padding:18px;text-align:center;cursor:pointer;color:var(--ink);background:var(--bg);font-size:1rem;margin:14px 0 0}
+.dz span{color:var(--mute);font-size:.85rem;font-weight:400}.dz.over{border-color:var(--accent);background:var(--chip)}
+.vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:right}th{color:var(--mute);font-size:.78rem}td:first-child,th:first-child{text-align:left}
+.tot{font-size:1.5rem;font-weight:700;margin-top:10px}
+details{border-top:1px solid var(--line);padding:8px 0}summary{cursor:pointer;font-weight:600}
+footer{text-align:center;color:var(--mute);font-size:.8rem;padding:10px 0 24px}
+#modal{position:fixed;inset:0;background:rgba(10,20,35,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+.mbox{background:var(--sf);border-radius:12px;padding:18px;max-width:380px;width:100%}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--brand);color:#fff;padding:10px 16px;border-radius:8px;z-index:30;max-width:90%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="top"><span class="logo">IGU</span><div class="brand"><b>Triagem de currículos</b><small>Recrutamento para imobiliárias</small></div></header>
+<main>
+<div id="auth">
+<section>
+<h2>Acesso à plataforma</h2>
+<p class="sub">Entre com seu e-mail e senha. Cada e-mail tem um perfil próprio, com dados criptografados.</p>
+<label for="em">E-mail</label><input id="em" type="email" autocomplete="email" inputmode="email">
+<label for="pw">Senha (mínimo 8 caracteres)</label><input id="pw" type="password" autocomplete="current-password">
+<label for="lic">Código de acesso (necessário para criar conta ou renovar)</label><textarea id="lic" rows="3" placeholder="Cole o código enviado pelo vendedor"></textarea>
+<label for="nm">Como quer ser chamado (só ao criar conta)</label><input id="nm" autocomplete="nickname">
+<div class="row"><button id="bEntrar">Entrar</button><button id="bCriar" class="sec">Criar conta</button></div>
+<p id="aerr" aria-live="polite"></p><p id="pedir"></p>
+<p class="empty">O acesso é liberado pelo vendedor. Os dados ficam só neste aparelho, criptografados com a sua senha. Não há recuperação de senha.</p>
+</section>
+</div>
+
+<div id="app" hidden>
+<div class="userbar"><span id="ola"></span><button id="bSair" class="sec">Sair</button></div>
+<nav class="tabs"><button class="on" data-v="vCand">Candidatos</button><button data-v="vVagas">Vagas</button><button data-v="vPerf">Meu perfil</button></nav>
+
+<div id="vCand">
+<section>
+<h2>Adicionar candidatos</h2>
+<label for="cv">Cole o currículo (Ctrl+Enter salva)</label>
+<textarea id="cv" placeholder="Cole aqui. A ferramenta escolhe a melhor vaga sozinha."></textarea>
+<div class="row"><button id="bAdd">Salvar candidato</button></div>
+<label class="dz" id="dz" for="pdfs"><b>Subir currículos em PDF</b><span>Toque para escolher vários arquivos ou arraste para cá</span></label><input id="pdfs" class="vh" type="file" accept=".pdf,application/pdf" multiple>
+<p id="st" aria-live="polite"></p>
+</section>
+<section>
+<h2>Candidatos salvos</h2>
+<div class="row" style="justify-content:space-between;margin:0 0 6px"><span id="cont" class="sub"></span><button id="bLimpar" class="sec">Apagar todos</button></div>
+<div id="lista"></div><div id="desc"></div>
+</section>
+</div>
+
+<div id="vVagas" hidden>
+<section>
+<h2>Vagas das imobiliárias</h2>
+<div class="g2"><div><label for="imob">Imobiliária</label><input id="imob"></div><div><label for="cargo">Vaga</label><input id="cargo"></div></div>
+<label for="reqs">Requisitos (palavras-chave separadas por vírgula)</label><input id="reqs" placeholder="creci, vendas, atendimento">
+<div class="g2"><div><label for="dia">Dia da entrevista</label><input id="dia" placeholder="quinta, 25/09"></div><div><label for="hora">Horário</label><input id="hora" placeholder="14h"></div></div>
+<label for="local">Local da entrevista</label><input id="local">
+<label for="regiao">Onde o candidato vai trabalhar (bairro)</label><input id="regiao" placeholder="Barra da Tijuca">
+<label for="perto">Bairros próximos aceitos (onde o candidato pode morar, separados por vírgula)</label><input id="perto" placeholder="Recreio, Jacarepaguá, Itanhangá">
+<p class="empty">Só entram candidatos com ensino médio completo ou mais. Se deixar os bairros vazios, a distância não é considerada.</p>
+<div class="row"><button id="bVaga">Salvar vaga</button><button id="bCanc" class="sec" hidden>Cancelar edição</button></div>
+<div id="lVagas"></div>
+</section>
+</div>
+
+<div id="vPerf" hidden>
+<section>
+<h2>Meu perfil</h2>
+<label for="pn">Nome</label><input id="pn"><p id="licinfo" class="empty"></p>
+<div id="funil"></div>
+</section>
+<section>
+<h2>Valores que eu ganho</h2>
+<div class="g2" id="taxas"></div>
+<label><input type="checkbox" id="soma"> O valor de CRECI soma com o valor normal (desmarcado: o CRECI substitui)</label>
+</section>
+<section>
+<h2>Ganhos no período</h2>
+<div class="g2"><div><label for="de">De</label><input id="de" type="date"></div><div><label for="ate">Até</label><input id="ate" type="date"></div></div>
+<div id="res"></div>
+</section>
+</div>
+</div>
+</main>
+<div id="modal" hidden><div class="mbox"><p id="mtxt"></p><div class="row"><button id="mok">Confirmar</button><button id="mno" class="sec">Cancelar</button></div></div></div>
+<div id="toast" hidden role="status"></div>
+<footer>Desenvolvido por Eng: Cie: Igor Gomes</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const hoje=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+/* ===== CONFIGURAÇÃO DO VENDEDOR (edite só estas duas linhas) ===== */
+const CHAVE_PUBLICA={"kty":"EC","crv":"P-256","x":"FjD0ZkD1bvHed2QifQ_6GkNbMFi9ifcrzSvfK4EpyJ8","y":"wM8uxbncIkAzxt3Nz_MzFIGc5_1QjRl3_8T6UhhnYk4"};
+const WHATS_VENDEDOR=''; // opcional, ex.: '5521999999999'
+/* ================================================================= */
+let S=null,KEY=null,UK='',SALT=null,timer,edit=null,tt;
+function aviso(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,5000)}
+function confirma(m){return new Promise(r=>{$('mtxt').textContent=m;$('modal').hidden=false;$('mok').onclick=()=>{$('modal').hidden=true;r(true)};$('mno').onclick=()=>{$('modal').hidden=true;r(false)}})}
+const VF=['imob','cargo','reqs','dia','hora','local','regiao','perto'];
+const EDU={superior:'Ensino superior',medio:'Ensino médio','?':'Escolaridade não identificada',baixo:'Abaixo do médio'};
+
+/* ---- Segurança: senha -> chave (PBKDF2) -> AES-GCM ---- */
+const te=new TextEncoder(),td=new TextDecoder();
+const b64=b=>{const u=new Uint8Array(b);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)};
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function ukey(e){return 'igu_'+[...new Uint8Array(await crypto.subtle.digest('SHA-256',te.encode(e)))].map(x=>x.toString(16).padStart(2,'0')).join('')}
+async function dk(p,salt){const m=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:210000,hash:'SHA-256'},m,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function persist(){
+  if(!S||!KEY)return;
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},KEY,te.encode(JSON.stringify(S)));
+  try{localStorage.setItem(UK,JSON.stringify({s:b64(SALT),i:b64(iv),d:b64(ct)}))}catch(e){aviso('Não consegui salvar: o espaço do navegador está cheio.')}
+}
+const salva=()=>{clearTimeout(timer);timer=setTimeout(persist,300)};
+const err=m=>{$('aerr').textContent=m};
+const b64u=x=>{x=x.replace(/-/g,'+').replace(/_/g,'/');return ub(x+'='.repeat((4-x.length%4)%4))};
+async function licVale(code,em,ref){
+  if(!CHAVE_PUBLICA)return'Esta cópia ainda não foi configurada pelo vendedor.';
+  code=(code||'').replace(/\s+/g,'');
+  if(!code)return'Digite o código de acesso enviado pelo vendedor.';
+  try{
+    const[p,g]=code.split('.');
+    const k=await crypto.subtle.importKey('jwk',CHAVE_PUBLICA,{name:'ECDSA',namedCurve:'P-256'},false,['verify']);
+    if(!await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},k,b64u(g),b64u(p)))return'Código de acesso inválido.';
+    const d=JSON.parse(td.decode(b64u(p)));
+    if(d.e!==em)return'Este código foi emitido para outro e-mail.';
+    if(d.x&&d.x<ref)return'Seu acesso venceu em '+d.x.split('-').reverse().join('/')+'. Peça um novo código ao vendedor.';
+    return'';
+  }catch(e){return'Código de acesso inválido.'}
+}
+async function entrar(novo){
+  err('');
+  const em=$('em').value.trim().toLowerCase(),pw=$('pw').value,lic=$('lic').value.replace(/\s+/g,'');
+  if(!/^\S+@\S+\.\S+$/.test(em)||pw.length<8)return err('Use um e-mail válido e uma senha com 8 ou mais caracteres.');
+  const uk=await ukey(em),raw=localStorage.getItem(uk);
+  if(novo){
+    if(raw)return err('Esse e-mail já tem conta. Clique em Entrar.');
+    const nm=$('nm').value.trim();if(!nm)return err('Diga como quer ser chamado.');
+    const m=await licVale(lic,em,hoje());if(m)return err(m);
+    SALT=crypto.getRandomValues(new Uint8Array(16));KEY=await dk(pw,SALT);UK=uk;
+    S={nome:nm,licenca:lic,visto:hoje(),vagas:[],cands:[],taxas:{ent:'10,00',entC:'80,00',bonN:'',bonV:'',ini:'180,00',iniC:'180,00',soma:false}};
+    await persist();
+  }else{
+    if(!raw)return err('E-mail ou senha incorretos.');
+    try{const r=JSON.parse(raw);SALT=ub(r.s);KEY=await dk(pw,SALT);S=JSON.parse(td.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:ub(r.i)},KEY,ub(r.d))));UK=uk}
+    catch(e){KEY=null;S=null;return err('E-mail ou senha incorretos.')}
+    const ref=S.visto&&S.visto>hoje()?S.visto:hoje();
+    const m=await licVale(lic||S.licenca,em,ref);
+    if(m){S=null;KEY=null;return err(m)}
+    if(lic)S.licenca=lic;S.visto=ref;await persist();
+  }
+  $('pw').value='';$('lic').value='';$('auth').hidden=true;$('app').hidden=false;abre();
+}
+$('bEntrar').onclick=()=>entrar(false);$('bCriar').onclick=()=>entrar(true);
+$('pw').addEventListener('keydown',e=>{if(e.key==='Enter')entrar(false)});
+$('bSair').onclick=()=>{S=null;KEY=null;UK='';$('app').hidden=true;$('auth').hidden=false;$('lista').innerHTML=''};
+function abre(){$('ola').textContent='Olá, '+S.nome+'!';mostra('vCand');renderVagas();renderCands();$('st').textContent=window.pdfjsLib?'Leitor de PDF pronto.':'Leitor de PDF indisponível: conecte-se à internet e recarregue a página.'}
+function mostra(id){['vCand','vVagas','vPerf'].forEach(v=>$(v).hidden=v!==id);document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===id));if(id==='vPerf')renderPerfil()}
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>mostra(b.dataset.v));
+
+/* ---- Vagas ---- */
+function renderVagas(){
+  $('lVagas').innerHTML=S.vagas.length?S.vagas.map(v=>`<div class="vaga"><strong>${esc(v.imob)}</strong> · ${esc(v.cargo)}<small>Trabalho: ${esc(v.regiao||'—')} · Aceita moradores de: ${esc(v.perto||'qualquer lugar')}</small><small>Entrevista: ${esc(v.dia)} ${esc(v.hora)} · ${esc(v.local)}</small><small>Requisitos: ${esc(v.reqs)}</small><div class="row"><button class="sec" data-a="ed" data-id="${v.id}">Editar</button><button class="sec" data-a="rm" data-id="${v.id}">Excluir</button></div></div>`).join(''):'<p class="empty">Nenhuma vaga cadastrada.</p>';
+}
+$('lVagas').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;const id=+b.dataset.id;
+  if(b.dataset.a==='rm'&&await confirma('Excluir esta vaga?')){S.vagas=S.vagas.filter(v=>v.id!==id);salva();renderVagas();renderCands()}
+  if(b.dataset.a==='ed'){const v=S.vagas.find(x=>x.id===id);edit=id;VF.forEach(k=>$(k).value=v[k]||'');$('bVaga').textContent='Atualizar vaga';$('bCanc').hidden=false;window.scrollTo(0,0)}
+});
+function limpaVaga(){VF.forEach(k=>$(k).value='');edit=null;$('bVaga').textContent='Salvar vaga';$('bCanc').hidden=true}
+$('bCanc').onclick=limpaVaga;
+$('bVaga').onclick=()=>{
+  const v={};VF.forEach(k=>v[k]=$(k).value.trim());
+  if(!v.imob||!v.cargo)return aviso('Preencha a imobiliária e a vaga.');
+  if(edit!==null){Object.assign(S.vagas.find(x=>x.id===edit),v)}else{v.id=Date.now();S.vagas.push(v)}
+  salva();limpaVaga();renderVagas();S.cands.forEach(c=>{if(!c.manual)assign(c)});renderCands();
+};
+
+/* ---- Leitura do currículo ---- */
+const achaTel=t=>{const m=t.match(/(?:\+?55\s*)?\(?\d{2}\)?\s*9?\s*\d{4}[\s.-]?\d{4}/);return m?m[0].trim():''};
+const achaNome=t=>{const l=t.split('\n').map(s=>s.trim()).find(s=>s);return l&&l.length<=45&&/^[A-Za-zÀ-ú' .-]+$/.test(l)?l:''};
+function educ(t){
+  t=norm(t);
+  if(/ensino superior|graduac|bacharel|licenciatura|tecnolog|faculdade|universidade|universitari|pos-?graduac|mba/.test(t))return'superior';
+  if(/medio (incompleto|cursando|em andamento)|2. grau (incompleto|cursando)|segundo grau (incompleto|cursando)/.test(t))return'baixo';
+  if(/ensino medio|2. grau|segundo grau|curso tecnico|tecnico em/.test(t))return'medio';
+  if(/fundamental/.test(t))return'baixo';
+  return'?';
+}
+const acc=v=>[v.regiao,...(v.perto||'').split(',')].map(s=>s.trim()).filter(Boolean);
+function achaBairro(t){
+  const nt=norm(t);
+  for(const v of S.vagas)for(const x of acc(v))if(nt.includes(norm(x)))return x;
+  const m=t.match(/(?:bairro|endere[cç]o|reside(?:nte)?(?: em)?|mora(?: em)?)\s*[:\-]?\s*([^\n|;]{3,60})/i);
+  return m?m[1].trim():'';
+}
+function locStat(v,c){
+  const l=acc(v).map(norm);if(!l.length)return'na';
+  const h=norm(c.bairro||'');
+  if(h)return l.some(x=>h.includes(x)||x.includes(h))?'perto':'longe';
+  return l.some(x=>norm(c.txt||'').includes(x))?'perto':'nd';
+}
+function ana(c,v){
+  if(!v)return{achou:[],falta:[],pct:0};
+  const k=v.reqs.split(',').map(s=>s.trim()).filter(Boolean),t=norm(c.txt||'');
+  const achou=k.filter(x=>t.includes(norm(x))),falta=k.filter(x=>!t.includes(norm(x)));
+  return{achou,falta,pct:k.length?Math.round(achou.length/k.length*100):0};
+}
+function assign(c){
+  let best=null,any=null;
+  S.vagas.forEach(v=>{
+    const l=locStat(v,c),sc=ana(c,v).pct+(c.creci?15:0)+(l==='perto'?20:0),o={v,l,sc};
+    if(!any||sc>any.sc)any=o;
+    if(l!=='longe'&&(!best||sc>best.sc))best=o;
+  });
+  c.desc=false;c.motivo='';c.manual=false;
+  const p=best||any;
+  if(p){c.vagaId=p.v.id;c.loc=p.l;c.score=p.sc}else{c.vagaId=0;c.loc='na';c.score=0}
+  if(!best&&any){c.desc=true;c.motivo='Mora longe das vagas'}
+  if(c.edu==='baixo'){c.desc=true;c.motivo='Sem ensino médio completo'}
+  remsg(c);
+}
+function remsg(c){const v=S.vagas.find(x=>x.id===c.vagaId);c.msg=v?montaMsg(c,v,ana(c,v)):''}
+function saud(){const h=new Date().getHours();return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'}
+function montaMsg(c,v,a){
+  const n0=(c.nome||'').trim().split(/\s+/)[0]||'',n=n0?n0[0].toUpperCase()+n0.slice(1).toLowerCase():'',nm=n?', '+n:'';
+  const p=[
+    pick([`Oi${nm}! Tudo bem?`,`${saud()}${nm}! Tudo bem?`,`Olá${nm}, tudo certo?`,`Oi${nm}, tudo bem por aí?`]),
+    pick([`Vi seu currículo e seu perfil combina com a vaga de ${v.cargo} na ${v.imob}.`,`Encontrei seu currículo e sua experiência tem tudo a ver com a vaga de ${v.cargo} na ${v.imob}.`,`Seu perfil chamou minha atenção para a vaga de ${v.cargo} na ${v.imob}.`,`Estou com uma oportunidade de ${v.cargo} na ${v.imob} e lembrei do seu perfil.`]),
+    a.achou.length?pick([`Gostei principalmente da sua experiência com ${a.achou[0]}.`,`Chamou atenção o seu histórico em ${a.achou[0]}.`,`Seu conhecimento em ${a.achou[0]} conta bastante para essa vaga.`]):'',
+    v.regiao?pick([`A vaga é na região de ${v.regiao}.`,`O trabalho é em ${v.regiao}.`]):'',
+    pick([`A entrevista é presencial, dia ${v.dia}, às ${v.hora}, em ${v.local}.`,`Estamos marcando entrevistas presenciais no dia ${v.dia}, às ${v.hora}. O local é ${v.local}.`,`Consegue ir a uma entrevista presencial dia ${v.dia}, às ${v.hora}? Fica em ${v.local}.`]),
+    pick(['Tem interesse?','Posso confirmar seu nome na lista?','Me conta se faz sentido para você!','Consegue comparecer?'])
+  ];
+  return p.filter(Boolean).join(pick([' ','\n\n']));
+}
+const wa=(tel,msg)=>{let d=(tel||'').replace(/\D/g,'');if(!d)return'';if(d.length<=11&&!d.startsWith('55'))d='55'+d;return'https://wa.me/'+d+'?text='+encodeURIComponent(msg)};
+
+function addTxt(txt,fb){
+  const c={id:Date.now()+Math.random(),nome:achaNome(txt)||fb||'',tel:achaTel(txt),creci:/creci/i.test(txt),edu:educ(txt),txt:txt.slice(0,8000),bairro:'',msgDate:'',ent:'',trein:'',ini:''};
+  c.bairro=achaBairro(txt);assign(c);S.cands.push(c);
+}
+function podeAdd(){if(!S.vagas.length){aviso('Cadastre ao menos uma vaga na aba Vagas.');return false}return true}
+$('bAdd').onclick=()=>{
+  const t=$('cv').value.trim();if(!t||!podeAdd())return;
+  addTxt(t);$('cv').value='';salva();renderCands();$('cv').focus();
+};
+$('cv').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter')$('bAdd').click()});
+const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/';
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';
+const lim=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('tempo esgotado ao ler o PDF')),ms))]);
+async function lerPdf(f){
+  if(!window.pdfjsLib)throw new Error('leitor de PDF não carregou; verifique a internet e recarregue');
+  const pdf=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;let t='';
+  for(let p=1;p<=pdf.numPages;p++){const tc=await(await pdf.getPage(p)).getTextContent();t+=tc.items.map(i=>i.str+(i.hasEOL?'\n':' ')).join('')+'\n'}
+  return t;
+}
+async function processaPdfs(fs){
+  const st=$('st');fs=fs.filter(f=>/pdf$/i.test(f.name)||f.type==='application/pdf');
+  if(!fs.length)return aviso('Escolha arquivos PDF.');
+  if(!podeAdd())return;
+  let ok=0;const bad=[];
+  for(let i=0;i<fs.length;i++){
+    st.textContent=`Lendo ${i+1} de ${fs.length}: ${fs[i].name}`;
+    try{const t=await lim(lerPdf(fs[i]),30000);if(t.trim().length<30)throw new Error('PDF sem texto (provavelmente escaneado)');addTxt(t,fs[i].name.replace(/\.pdf$/i,''));ok++}
+    catch(x){bad.push(`${fs[i].name} (${x&&x.message||x})`)}
+  }
+  st.textContent=`${ok} candidato(s) salvo(s).`+(bad.length?' Falhou: '+bad.join('; ')+'. Nesses casos, abra o PDF, copie o texto e cole acima.':'');
+  salva();renderCands();
+}
+$('pdfs').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';processaPdfs(fs)});
+['dragover','dragleave','drop'].forEach(ev=>$('dz').addEventListener(ev,e=>{e.preventDefault();$('dz').classList.toggle('over',ev==='dragover');if(ev==='drop')processaPdfs([...e.dataTransfer.files])}));
+
+/* ---- Lista de candidatos ---- */
+function card(c){
+  const v=S.vagas.find(x=>x.id===c.vagaId),a=ana(c,v),link=v?wa(c.tel,c.msg):'';
+  const opts=S.vagas.map(x=>`<option value="${x.id}" ${x.id===c.vagaId?'selected':''}>${esc(x.imob)} · ${esc(x.cargo)}</option>`).join('');
+  const D=(f,l)=>`<div><label>${l}</label><input type="date" data-f="${f}" value="${esc(c[f])}"></div>`;
+  return `<article class="card ${c.msgDate?'sent':''}" data-id="${c.id}">
+<header><strong>${esc(c.nome||'Sem nome')}</strong><span>${a.pct}% dos requisitos</span></header>
+<div>${c.creci?'<span class="tag">CRECI</span>':''}<span class="tag" style="background:var(--mute)">${EDU[c.edu]}</span>${c.loc==='nd'&&!c.desc?'<span class="tag">Confirmar bairro</span>':''}${c.desc?`<span class="tag">${esc(c.motivo)}</span>`:''}</div>
+<div class="chips">${a.achou.map(k=>`<span class="chip">${esc(k)}</span>`).join('')}${a.falta.map(k=>`<span class="chip no">${esc(k)}</span>`).join('')}</div>
+<label>Melhor vaga (pode trocar)</label><select data-f="vagaId">${opts}</select>
+<div class="g2"><div><label>Bairro onde mora</label><input data-f="bairro" value="${esc(c.bairro)}"></div><div><label>Telefone</label><input data-f="tel" inputmode="tel" value="${esc(c.tel)}"></div></div>
+<label>Nome</label><input data-f="nome" value="${esc(c.nome)}">
+<label>Mensagem (pode editar)</label><textarea data-f="msg">${esc(c.msg)}</textarea>
+<label><input type="checkbox" data-f="creci" ${c.creci?'checked':''}> Tem CRECI</label>
+<div class="g2">${D('msgDate','Mensagem enviada em')}${D('ent','Foi à entrevista em')}${D('trein','Fez treinamento em')}${D('ini','Começou a trabalhar em')}</div>
+<div class="row"><a class="wa ${link?'':'off'}" target="_blank" rel="noopener" href="${link||'#'}">${link?'Abrir no WhatsApp':'Falta o telefone'}</a><button class="sec" data-a="regen">Nova variação</button><button class="sec" data-a="copy">Copiar</button><button class="sec" data-a="rm">Remover</button></div>
+</article>`;
+}
+function renderCands(){
+  const act=S.cands.filter(c=>!c.desc).sort((a,b)=>(!!a.msgDate-!!b.msgDate)||b.score-a.score),ds=S.cands.filter(c=>c.desc);
+  $('cont').textContent=`${act.filter(c=>!c.msgDate).length} para enviar · ${act.length} aptos · ${ds.length} descartados`;
+  $('bLimpar').hidden=!S.cands.length;
+  $('lista').innerHTML=act.map(card).join('')||'<p class="empty">Nenhum candidato apto ainda.</p>';
+  $('desc').innerHTML=ds.length?`<details><summary>Descartados (${ds.length}): ensino médio ou distância</summary>${ds.map(card).join('')}</details>`:'';
+}
+const getC=el=>S.cands.find(c=>String(c.id)===el.closest('.card').dataset.id);
+$('vCand').addEventListener('input',e=>{
+  const f=e.target.dataset.f;if(!f||f==='bairro'||f==='vagaId')return;
+  const c=getC(e.target);c[f]=e.target.type==='checkbox'?e.target.checked:e.target.value;
+  if(f==='tel'||f==='msg'){const a=e.target.closest('.card').querySelector('a.wa'),l=wa(c.tel,c.msg);a.href=l||'#';a.classList.toggle('off',!l);a.textContent=l?'Abrir no WhatsApp':'Falta o telefone'}
+  salva();
+});
+$('vCand').addEventListener('change',e=>{
+  const f=e.target.dataset.f;if(f!=='bairro'&&f!=='vagaId')return;
+  const c=getC(e.target);
+  if(f==='bairro'){c.bairro=e.target.value.trim();assign(c)}
+  else{c.vagaId=+e.target.value;c.manual=true;c.desc=false;c.motivo='';c.loc=locStat(S.vagas.find(x=>x.id===c.vagaId),c);remsg(c)}
+  salva();renderCands();
+});
+$('vCand').addEventListener('click',e=>{
+  const a=e.target.closest('a.wa');
+  if(a){if(a.classList.contains('off'))return;const c=getC(a);if(!c.msgDate){c.msgDate=hoje();a.closest('.card').querySelector('[data-f=msgDate]').value=c.msgDate;a.closest('.card').classList.add('sent');salva()}return}
+  const b=e.target.closest('button');if(!b||!b.dataset.a)return;const c=getC(b);
+  if(b.dataset.a==='rm'){S.cands=S.cands.filter(x=>x!==c);salva();renderCands()}
+  if(b.dataset.a==='regen'){remsg(c);salva();renderCands()}
+  if(b.dataset.a==='copy'){try{navigator.clipboard.writeText(c.msg).then(()=>b.textContent='Copiado')}catch(x){}}
+});
+$('bLimpar').onclick=async()=>{if(await confirma(`Apagar todos os ${S.cands.length} candidatos salvos?`)){S.cands=[];salva();renderCands()}};
+
+/* ---- Perfil e ganhos ---- */
+const TX=[['ent','Entrevista presencial (por candidato)'],['entC','Entrevista com CRECI (por candidato)'],['bonN','Bônus a cada quantos candidatos na entrevista'],['bonV','Valor do bônus'],['ini','Começou a trabalhar (por candidato)'],['iniC','Começou a trabalhar com CRECI']];
+function renderPerfil(){
+  $('pn').value=S.nome;try{const d=JSON.parse(td.decode(b64u(S.licenca.split('.')[0])));$('licinfo').textContent='Acesso '+(d.x?'válido até '+d.x.split('-').reverse().join('/'):'sem vencimento')}catch(e){}
+  const L=[['Mensagens enviadas','msgDate'],['Foram à entrevista','ent'],['Fizeram o treinamento','trein'],['Começaram a trabalhar','ini']];
+  $('funil').innerHTML=L.map(([t,f])=>{const l=S.cands.filter(c=>c[f]);return`<details><summary>${t}: <strong>${l.length}</strong></summary>${l.map(c=>{const v=S.vagas.find(x=>x.id===c.vagaId);return`<div class="empty">${esc(c.nome||'Sem nome')}${c.creci?' (CRECI)':''} · ${esc(v?v.imob:'')} · ${c[f].split('-').reverse().join('/')}</div>`}).join('')||'<div class="empty">Ninguém ainda.</div>'}</details>`}).join('');
+  $('taxas').innerHTML=TX.map(([k,l])=>`<div><label>${l}</label><input data-t="${k}" inputmode="decimal" value="${esc(S.taxas[k])}"></div>`).join('');
+  $('soma').checked=!!S.taxas.soma;calc();
+}
+const cents=s=>{const x=String(s||'').trim();if(!x)return 0;const n=Number(x.includes(',')?x.replace(/\./g,'').replace(',','.'):x);return isFinite(n)?Math.round(n*100):0};
+const brl=c=>(c/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+function calc(){
+  const T=S.taxas,f=$('de').value,t=$('ate').value,inR=d=>d&&(!f||d>=f)&&(!t||d<=t);
+  let e=0,eC=0,i=0,iC=0;
+  S.cands.forEach(c=>{if(inR(c.ent))c.creci?eC++:e++;if(inR(c.ini))c.creci?iC++:i++});
+  const bn=parseInt(T.bonN)||0,bq=bn>0?Math.floor((e+eC)/bn):0,so=!!T.soma,s=so?' (todos)':' (sem CRECI)';
+  const R=[['Entrevista'+s,so?e+eC:e,cents(T.ent)],['Entrevista com CRECI',eC,cents(T.entC)],['Bônus a cada '+(bn||'X')+' na entrevista',bq,cents(T.bonV)],['Começou a trabalhar'+s,so?i+iC:i,cents(T.ini)],['Começou a trabalhar com CRECI',iC,cents(T.iniC)]];
+  const tot=R.reduce((a,r)=>a+r[1]*r[2],0);
+  $('res').innerHTML=`<table><tr><th>Item</th><th>Qtd</th><th>Valor</th><th>Total</th></tr>${R.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${brl(r[2])}</td><td>${brl(r[1]*r[2])}</td></tr>`).join('')}</table><div class="tot">Total: ${brl(tot)}</div><p class="empty">${f||t?'Período: '+(f?f.split('-').reverse().join('/'):'início')+' a '+(t?t.split('-').reverse().join('/'):'hoje'):'Todo o período'}. Cada item conta pela data preenchida no candidato.</p>`;
+}
+$('taxas').addEventListener('input',e=>{const k=e.target.dataset.t;if(!k)return;S.taxas[k]=e.target.value;salva();calc()});
+$('soma').onchange=()=>{S.taxas.soma=$('soma').checked;salva();calc()};
+['de','ate'].forEach(id=>$(id).addEventListener('input',calc));
+$('pn').addEventListener('input',()=>{S.nome=$('pn').value;$('ola').textContent='Olá, '+S.nome+'!';salva()});
+if(!CHAVE_PUBLICA)err('Esta cópia ainda não foi configurada pelo vendedor.');
+if(WHATS_VENDEDOR)$('pedir').innerHTML='<a href="https://wa.me/'+WHATS_VENDEDOR+'?text='+encodeURIComponent('Olá! Quero acesso ao IGU Triagem de currículos.')+'" target="_blank" rel="noopener">Solicitar acesso ao vendedor</a>';
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
